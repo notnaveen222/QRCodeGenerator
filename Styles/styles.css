@@ -1,0 +1,76 @@
+body {
+    margin: 0px;
+    background-color: black;
+    transition: background-color 0.5s ease;
+ }
+ .tile{
+     display: flex;
+     height: 100vh;
+ }
+ .Nav4-Row{
+     height: 70px;
+     background-color: black;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+ 
+     transition: background-color 0.5s ease, color 0.5s ease;
+ }
+ .icon{
+     height: 60px;
+     margin-right: 50px;
+     cursor: pointer;
+ }
+ .icon-inv{
+     filter: invert(1);
+ }
+ .text{
+     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+     margin-left: 60px;
+     font-size: 20px;
+ }
+ .white{
+     color: white;
+ }
+ .dark{
+     color: black;
+ }
+ 
+ 
+ .input-text{
+     color: white;
+     font-family: 'SF Pro Display', sans-serif;
+     font-size: 50px;
+     margin-top: 250px;
+     margin-left: 250px;
+     transition: color 0.5s ease;
+ }
+ #UserInput{
+     margin-top: 10px;
+     outline: 0;
+     border-width: 0 0 0px;
+     
+     width: 400px;
+     border-color: white;
+     background-color: black;
+     color: white;
+     height: 50px;
+     font-size: 25px;
+     max-width: 1000px;
+     margin-left: 250px;
+     transition: background-color 0.5s ease, border-color 0.5s ease;
+     
+ }
+ #UserInput:focus{
+     border-width: 0 0 2px;
+ }
+ .GenBut{
+     color: white;
+     display: inline;
+     font-size: 23px;
+     font-family: 'SF Pro Display', sans-serif;
+     cursor: pointer;
+     margin-left: 20px;
+     
+ }
+ 
