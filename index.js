@@ -19,6 +19,8 @@ function white(){
         document.getElementById("UserInput").style.color = 'black';
         document.getElementsByClassName("GenBut")[0].style.color='black';
         document.getElementById('qr-image').style.filter = 'invert(1)';
+        document.getElementsByClassName('err-text')[0].style.color = 'black';
+        document.getElementsByClassName('copyright')[0].style.color = 'black';
 
     } else if (toggleval == 1) {
         targetElem.style.backgroundColor = "black";
@@ -34,6 +36,8 @@ function white(){
         document.getElementById("UserInput").style.color = 'white';
         document.getElementsByClassName("GenBut")[0].style.color='white';
         document.getElementById('qr-image').style.filter = 'invert(0)';
+        document.getElementsByClassName('err-text')[0].style.color = 'white';
+        document.getElementsByClassName('copyright')[0].style.color = 'white';
 
     }
 
