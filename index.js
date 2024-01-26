@@ -1,9 +1,3 @@
-// import qr from 'qr-image'
-// import fs from 'fs'
-
-// var text = 'ytt';
-// var qr_svg = qr.image(text);
-// qr_svg.pipe(fs.createWriteStream('QR.png'));
 
 var toggleval = 0;
 function white(){
@@ -23,6 +17,8 @@ function white(){
         document.getElementById("UserInput").style.background = "white";
         document.getElementById("UserInput").style.borderColor = 'black';
         document.getElementById("UserInput").style.color = 'black';
+        document.getElementsByClassName("GenBut")[0].style.color='black';
+        document.getElementById('qr-image').style.filter = 'invert(1)';
 
     } else if (toggleval == 1) {
         targetElem.style.backgroundColor = "black";
@@ -36,8 +32,34 @@ function white(){
         document.getElementById("UserInput").style.background = "black";
         document.getElementById("UserInput").style.borderColor = 'white';
         document.getElementById("UserInput").style.color = 'white';
+        document.getElementsByClassName("GenBut")[0].style.color='white';
+        document.getElementById('qr-image').style.filter = 'invert(0)';
 
     }
 
 
 }
+// function processINP() {
+//     var input = document.getElementById("UserInput").value;
+//     console.log(input)
+//     var input = document.getElementById("qr-image").src='Goblin-nobg.png';
+//   }
+
+async function processINP(){
+    var input = document.getElementById("UserInput").value
+
+    var response = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${input}`);
+
+    if (response.ok) {
+        const blob = await response.blob();
+        const imageURL = URL.createObjectURL(blob);
+        document.getElementById('qr-image').src= imageURL;
+    }
+
+}
+
+document.getElementById('UserInput').addEventListener("keydown", function(event){
+    if (event.key === 'Enter'){
+        processINP();
+    }
+})
