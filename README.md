@@ -9,9 +9,9 @@ Coded with HTML, CSS, JS.
 
 - **Versatile Data Types:** Generate QR codes for URLs, text, contact information, and more.
 - **Easy to Use:** Simple and intuitive interface for generating QR codes.
-- **Cross-Platform:** Works on [Windows/Linux/Mac] platforms.
-- **Upcoming Features:** 
-- **Customization:** Customize QR code size, color, and error correction level.
+- **Cross-Platform:** Works on [Windows/Linux/Mac] platforms. 
+- **Upcoming Features:** <br>
+ **Customization:** Customize QR code size, color, and error correction level.
 
 ## Contact
 For any inquiries or support, please contact [itsnotnaveen@gmail.com].
