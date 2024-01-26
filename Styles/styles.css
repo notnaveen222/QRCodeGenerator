@@ -3,6 +3,9 @@ body {
     background-color: black;
     transition: background-color 0.5s ease;
  }
+ title{
+    margin-left: 10px;
+ }
  .tile{
      display: flex;
      height: 100vh;
@@ -93,4 +96,41 @@ body {
     top: 0;
     left: 0;
     z-index: 100;
+ }
+
+ .copyright{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+ }
+ .err-text{
+    color: white;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    font-size: 20px;
+    margin-left: 254px;
+    margin-top: 20px;
+    opacity: 0%;
+    transition: opacity 0.5s ease-in-out;
+     /* Add a 2-second start delay */
+ }
+.animate-custom {
+    animation: moveup 0.5s ease-in-out alternate;
+    animation-delay: 0s;
+}
+
+
+
+ @keyframes moveup {
+    from {
+        transform: translateY(+20px);
+    }
+    to {
+        transform: translateY(0px);
+    }
  }

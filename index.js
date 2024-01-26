@@ -47,13 +47,22 @@ function white(){
 
 async function processINP(){
     var input = document.getElementById("UserInput").value
-
-    var response = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${input}`);
-
-    if (response.ok) {
-        const blob = await response.blob();
-        const imageURL = URL.createObjectURL(blob);
-        document.getElementById('qr-image').src= imageURL;
+    if (input != '') {
+        var response = await fetch(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${input}`);
+    
+        if (response.ok) {
+            const blob = await response.blob();
+            const imageURL = URL.createObjectURL(blob);
+            document.getElementById('qr-image').src= imageURL;
+        }
+    } else {
+        var errText = document.getElementsByClassName('err-text')[0]
+        errText.style.opacity = '100%'
+        errText.classList.add('animate-custom');
+        setTimeout(() => {
+            errText.style.opacity = '0%'
+            errText.classList.remove('animate-custom')
+        }, 700);
     }
 
 }
