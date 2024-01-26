@@ -108,6 +108,7 @@ body {
     justify-content: center;
     color: white;
     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    transition: color 0.5s ease;;
  }
  .err-text{
     color: white;
