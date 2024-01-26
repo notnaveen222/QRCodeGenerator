@@ -11,7 +11,8 @@ Coded with HTML, CSS, JS.
 - **Easy to Use:** Simple and intuitive interface for generating QR codes.
 - **Cross-Platform:** Works on [Windows/Linux/Mac] platforms. 
 - **Upcoming Features:** <br>
- **Customization:** Customize QR code size, color, and error correction level.
+ **Customization:** Customize QR code size, color, and error correction level.<br>
+ **Chrome Extension:** Seamlessly generate QR Codes directly from your browser.
 
 ## Contact
 For any inquiries or support, please contact [itsnotnaveen@gmail.com].
