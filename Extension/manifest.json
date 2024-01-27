@@ -3,10 +3,14 @@
     "version" : "0.1.0",
     "description": "Extension that allows you to create QR Codes instantly.",
     "manifest_version" : 3,
+    "permissions": ["activeTab"],
     "author" : "nbn",
     "action" : {
         "default_popup" : "index.html",
         "default_title" : "QRC Gen",
         "default_icon"  : "Assets/qr-icon.png"
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
     }
 }

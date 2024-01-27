@@ -21,6 +21,29 @@ addEventListener('keydown', async (event) => {
     }
 })
 
-document.getElementById('close-button').addEventListener('click',() => {
-    window.close();
-})
+ document.getElementById('close-button').addEventListener('click',() => {
+     window.close();
+ })
+
+// working:
+// document.addEventListener('DOMContentLoaded', function () {
+//     console.log('Popup DOMContentLoaded');
+//     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//       var currentUrl = tabs[0].url;
+//       document.getElementById('current-url').innerHTML = currentUrl;
+//     });
+//   });
+
+// function currentURL() {
+//     document.addEventListener('DOMContentLoaded', function () {
+//         console.log('Popup DOMContentLoaded');
+//         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//           var currentUrl = tabs[0].url;
+
+//           var input = document.getElementById('UserInput')
+//           input.value = currentURL;
+//           //document.getElementById('currentUrl').innerHTML = currentUrl;
+//         });
+//       });
+    
+// }

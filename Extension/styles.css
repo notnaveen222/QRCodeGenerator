@@ -63,3 +63,20 @@ body {
     right: 20px;
     cursor: pointer;
 }
+#currentUrl{
+    color: white;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    font-size: 20px;
+    display: flex;
+    width: 130px;
+    margin-left: 50px;
+    margin-top: 0px;
+
+    justify-content: center;
+
+    cursor: pointer;
+    border-color: white;
+    border: solid;
+    border-width: 1px;
+    border-radius: 3px;
+}
