@@ -108,7 +108,7 @@ body {
     justify-content: center;
     color: white;
     font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
-    transition: color 0.5s ease;;
+    transition: color 0.5s ease;
  }
  .err-text{
     color: white;
@@ -125,7 +125,13 @@ body {
     animation-delay: 0s;
 }
 
-
+.get-Ext{
+    color: white;
+    font-family: 'Neue Haas Grotesk Display Pro', sans-serif;
+    margin-left: 1350px;
+    text-decoration: none;
+    transition: color 0.5s ease;
+}
 
  @keyframes moveup {
     from {

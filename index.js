@@ -21,6 +21,7 @@ function white(){
         document.getElementById('qr-image').style.filter = 'invert(1)';
         document.getElementsByClassName('err-text')[0].style.color = 'black';
         document.getElementsByClassName('copyright')[0].style.color = 'black';
+        document.getElementsByClassName('get-Ext')[0].style.color = 'black';
 
     } else if (toggleval == 1) {
         targetElem.style.backgroundColor = "black";
@@ -38,6 +39,7 @@ function white(){
         document.getElementById('qr-image').style.filter = 'invert(0)';
         document.getElementsByClassName('err-text')[0].style.color = 'white';
         document.getElementsByClassName('copyright')[0].style.color = 'white';
+        document.getElementsByClassName('get-Ext')[0].style.color = 'white';
 
     }
 
