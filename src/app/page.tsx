@@ -1,103 +1,252 @@
+"use client";
+import { BinIcon, ColorPicker, UploadIcon } from "@/components/Icons";
 import Image from "next/image";
+import QRCodeStyling from "qr-code-styling";
+import { useState, useEffect, useRef } from "react";
+import { HexColorPicker } from "react-colorful";
+
+const BACKGROUND_COLORS = ["#FFFFFF", "#000000"];
+const QR_COLOR = ["#FFFFFF", "#000000"];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [inputText, setInputText] = useState<string>("");
+  const [qrDetails, setQRDetails] = useState({
+    logoUrl: "",
+    backgroundColor: "#FFFFFF",
+    color: "#000000",
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [bgColor, setBgColor] = useState<string>(qrDetails.backgroundColor);
+  const [dotColor, setDotColor] = useState<string>(qrDetails.color);
+
+  const [bgPicker, setBgPicker] = useState<boolean>(false);
+  const [colorPicker, setColorPicker] = useState<boolean>(false);
+
+  // click-outside for both pickers
+  const bgPickerRef = useRef<HTMLDivElement | null>(null);
+  const dotPickerRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      const target = e.target as Node;
+      if (bgPickerRef.current && !bgPickerRef.current.contains(target)) {
+        setBgPicker(false);
+      }
+      if (dotPickerRef.current && !dotPickerRef.current.contains(target)) {
+        setColorPicker(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // QR instance + preview URL
+  const qrRef = useRef<QRCodeStyling | null>(null);
+  const [qrUrl, setQrUrl] = useState<string>("");
+
+  // init QR instance once
+  useEffect(() => {
+    qrRef.current = new QRCodeStyling({
+      width: 300,
+      height: 300,
+      type: "svg",
+      data: " ", // Initialize with empty space, will be updated in handleQrGenerate
+      qrOptions: { errorCorrectionLevel: "M" },
+      dotsOptions: { color: "#000000" },
+      backgroundOptions: { color: "#FFFFFF" },
+      imageOptions: { crossOrigin: "anonymous", margin: 20, imageSize: 0.25 },
+    });
+
+    return () => {
+      setQrUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return "";
+      });
+    };
+  }, []);
+
+  const handleQrGenerate = async () => {
+    const data = inputText.trim();
+    if (!data) return;
+
+    const qr = new QRCodeStyling({
+      width: 300,
+      height: 300,
+      type: "svg",
+      data,
+      qrOptions: { errorCorrectionLevel: "M" },
+      dotsOptions: { color: qrDetails.color },
+      backgroundOptions: { color: qrDetails.backgroundColor },
+      image: qrDetails.logoUrl || undefined,
+      imageOptions: { crossOrigin: "anonymous", margin: 20, imageSize: 0.25 },
+    });
+
+    const blob = await qr.getRawData("png");
+    const url = URL.createObjectURL(blob as Blob);
+
+    setQrUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return url;
+    });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setQRDetails((prev) => ({
+        ...prev,
+        logoUrl: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  return (
+    <div className="flex flex-col grow h-full">
+      <input
+        className="focus:outline-none font-medium text-lg input-box border-b border-b-white/20 focus:border-b-white transition-all duration-150 ease-out mb-5"
+        placeholder="Enter Input"
+        value={inputText}
+        onChange={(e) => setInputText(e.target.value)}
+      />
+
+      <div className="text-white font-medium flex flex-col gap-y-2">
+        <div className="text-lg mb-2">
+          Options{" "}
+          <span className="text-white/60 text-sm">( More Coming Soon )</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+
+        {/* Background Color */}
+        <div className="flex items-center justify-between ">
+          <div>Background Color</div>
+          <div className="flex gap-x-2 items-center">
+            {BACKGROUND_COLORS.map((color, index) => {
+              const selected =
+                qrDetails.backgroundColor.toLowerCase() === color.toLowerCase();
+              return (
+                <div
+                  key={index}
+                  style={{ backgroundColor: color }}
+                  className={`rounded-full w-7 h-7 cursor-pointer ${
+                    selected ? "border-2 border-blue-500" : ""
+                  }`}
+                  onClick={() => {
+                    setQRDetails((p) => ({ ...p, backgroundColor: color }));
+                    setBgColor(color);
+                  }}
+                />
+              );
+            })}
+
+            <div
+              className="text-white w-[75px] flex justify-center rounded-lg px-2"
+              style={{ backgroundColor: bgColor }}
+            >
+              {bgColor}
+            </div>
+
+            <div
+              className="size-5 flex justify-center items-center relative rounded-full h-7 w-7"
+              onClick={() => setBgPicker((prev) => !prev)}
+            >
+              <div className="size-[19px]">
+                <ColorPicker />
+              </div>
+              {bgPicker && (
+                <div
+                  ref={bgPickerRef}
+                  className="absolute z-10 mt-2 p-3 rounded shadow bg-white text-black"
+                >
+                  <HexColorPicker
+                    color={bgColor}
+                    onChange={(hex) => {
+                      setBgColor(hex);
+                      setQRDetails((p) => ({ ...p, backgroundColor: hex }));
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Dots Color */}
+        <div className="flex items-center justify-between ">
+          <div>Dots Color</div>
+          <div className="flex gap-x-2 items-center">
+            {QR_COLOR.map((c, idx) => {
+              const selected =
+                qrDetails.color.toLowerCase() === c.toLowerCase();
+              return (
+                <div
+                  key={idx}
+                  style={{ backgroundColor: c }}
+                  className={`rounded-full w-7 h-7 cursor-pointer ${
+                    selected ? "border-2 border-blue-500" : ""
+                  }`}
+                  onClick={() => {
+                    setQRDetails((p) => ({ ...p, color: c }));
+                    setDotColor(c);
+                  }}
+                />
+              );
+            })}
+
+            <div
+              className="text-white w-[75px] rounded-lg flex justify-center"
+              style={{ backgroundColor: dotColor }}
+            >
+              {dotColor}
+            </div>
+
+            <div
+              className="size-5 flex justify-center items-center relative rounded-full h-7 w-7"
+              onClick={() => setColorPicker((prev) => !prev)}
+            >
+              <div className="size-[19px]">
+                <ColorPicker />
+              </div>
+              {colorPicker && (
+                <div
+                  ref={dotPickerRef}
+                  className="absolute z-10 mt-2 p-3 rounded shadow bg-white text-black"
+                >
+                  <HexColorPicker
+                    color={dotColor}
+                    onChange={(hex) => {
+                      setDotColor(hex);
+                      setQRDetails((p) => ({ ...p, color: hex }));
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Generate button */}
+      <button
+        onClick={handleQrGenerate}
+        className="text-center cursor-pointer font-medium my-5 w-fit mx-auto border border-white/10 rounded-lg px-3 py-0.5 hover:border-white/50 transition-all duration-250 ease-out text-lg mb-10"
+      >
+        Generate
+      </button>
+
+      {/* Preview box */}
+      <div className="h-[300px] w-[300px] flex items-center justify-center border border-white mx-auto ">
+        {qrUrl ? (
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={qrUrl}
+            alt="Generated QR"
+            width={300}
+            height={300}
+            unoptimized
+            className="rounded"
+            priority
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ) : (
+          <span className="text-sm font-medium">Your QR will appear here</span>
+        )}
+      </div>
     </div>
   );
 }
