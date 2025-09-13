@@ -266,7 +266,7 @@ export default function Home() {
               placeholder="qr-code"
               value={qrName}
               onChange={(e) => setQrName(e.target.value)}
-              className="focus:outline-none font-medium text-lg input-box border-b border-b-white/20 focus:border-b-white transition-all duration-150 ease-out "
+              className="w-[182px] text-left focus:outline-none font-medium text-lg input-box border-b border-b-white/20 focus:border-b-white transition-all duration-150 ease-out "
             />
           </div>
         </div>
