@@ -42,6 +42,8 @@ export default function Home() {
   // QR instance + preview URL
   const qrRef = useRef<QRCodeStyling | null>(null);
   const [qrUrl, setQrUrl] = useState<string>("");
+  const [qrBlob, setQrBlob] = useState<Blob | null>(null);
+  const [qrName, setQrName] = useState<string>("qr-code");
 
   // init QR instance once
   useEffect(() => {
@@ -82,21 +84,34 @@ export default function Home() {
 
     const blob = await qr.getRawData("png");
     const url = URL.createObjectURL(blob as Blob);
-
+    setQrBlob(blob as Blob);
     setQrUrl((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return url;
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setQRDetails((prev) => ({
-        ...prev,
-        logoUrl: URL.createObjectURL(file),
-      }));
-    }
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setQRDetails((prev) => ({
+  //       ...prev,
+  //       logoUrl: URL.createObjectURL(file),
+  //     }));
+  //   }
+  // };
+  const handleQrDownload = () => {
+    if (!qrBlob) return;
+    const qrCodeName = qrName.trim() == "" ? "qr-code" : qrName;
+    const url = URL.createObjectURL(qrBlob as Blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${qrCodeName}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -221,8 +236,18 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <div className="flex justify-between items-center">
+          <div className="">QR Name</div>
+          <div>
+            <input
+              placeholder="qr-code"
+              value={qrName}
+              onChange={(e) => setQrName(e.target.value)}
+              className="focus:outline-none font-medium text-lg input-box border-b border-b-white/20 focus:border-b-white transition-all duration-150 ease-out "
+            />
+          </div>
+        </div>
       </div>
-
       {/* Generate button */}
       <button
         onClick={handleQrGenerate}
@@ -247,6 +272,17 @@ export default function Home() {
           <span className="text-sm font-medium">Your QR will appear here</span>
         )}
       </div>
+      <button
+        disabled={qrBlob == null}
+        className={`text-center font-medium my-5 w-fit mx-auto border border-white/10 rounded-lg px-3 py-0.5  transition-all duration-250 ease-out text-lg mb-10 ${
+          qrBlob != null
+            ? "cursor-pointer hover:border-white/50"
+            : "cursor-default "
+        }`}
+        onClick={handleQrDownload}
+      >
+        Download
+      </button>
     </div>
   );
 }
