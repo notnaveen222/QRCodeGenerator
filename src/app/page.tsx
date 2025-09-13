@@ -44,7 +44,8 @@ export default function Home() {
   const [qrUrl, setQrUrl] = useState<string>("");
   const [qrBlob, setQrBlob] = useState<Blob | null>(null);
   const [qrName, setQrName] = useState<string>("qr-code");
-
+  const [toast, setToast] = useState<boolean>(false);
+  const [toastTitle, setToastTittle] = useState<string>("");
   // init QR instance once
   useEffect(() => {
     qrRef.current = new QRCodeStyling({
@@ -110,8 +111,30 @@ export default function Home() {
     document.body.appendChild(a);
     a.click();
     a.remove();
-
+    setToastTittle("QR Code Downlaoded");
+    showToast();
     URL.revokeObjectURL(url);
+  };
+  const handleQrCopy = async () => {
+    if (!qrBlob) return;
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "image/png": qrBlob,
+        }),
+      ]);
+    } catch (err) {
+      console.error("Copy failed", err);
+    } finally {
+      setToastTittle("QR Code Copied");
+      showToast();
+    }
+  };
+  const showToast = () => {
+    setToast(true);
+    setTimeout(() => {
+      setToast(false);
+    }, 3000);
   };
 
   return (
@@ -272,17 +295,45 @@ export default function Home() {
           <span className="text-sm font-medium">Your QR will appear here</span>
         )}
       </div>
-      <button
-        disabled={qrBlob == null}
-        className={`text-center font-medium my-5 w-fit mx-auto border border-white/10 rounded-lg px-3 py-0.5  transition-all duration-250 ease-out text-lg mb-10 ${
-          qrBlob != null
-            ? "cursor-pointer hover:border-white/50"
-            : "cursor-default "
-        }`}
-        onClick={handleQrDownload}
-      >
-        Download
-      </button>
+      <div className="flex justify-between  w-fit mx-auto gap-x-[133px]  items-center">
+        <button
+          disabled={qrBlob == null}
+          className={`text-center font-medium my-5 w-fit mx-auto border border-white/10 rounded-lg px-3 py-0.5  transition-all duration-250 ease-out text-lg mb-10 ${
+            qrBlob != null
+              ? "cursor-pointer hover:border-white/50"
+              : "cursor-default "
+          }`}
+          onClick={handleQrDownload}
+        >
+          Download
+        </button>
+        <button
+          disabled={qrBlob == null}
+          className={`text-center font-medium my-5 w-fit mx-auto border border-white/10 rounded-lg px-3 py-0.5  transition-all duration-250 ease-out text-lg mb-10 ${
+            qrBlob != null
+              ? "cursor-pointer hover:border-white/50"
+              : "cursor-default "
+          }`}
+          onClick={handleQrCopy}
+        >
+          Copy
+        </button>
+      </div>
+      <Toast showToast={toast} title={toastTitle} />
+    </div>
+  );
+}
+
+function Toast({ showToast, title }: { showToast: boolean; title: string }) {
+  return (
+    <div
+      className={`fixed w-full left-0  text-center transition-all duration-150 ease-out  flex justify-center ${
+        showToast ? "bottom-10 " : "-bottom-10 "
+      }`}
+    >
+      <div className="bg-white text-black font-medium px-3 py-1 w-fit rounded-lg ">
+        {title}
+      </div>
     </div>
   );
 }
